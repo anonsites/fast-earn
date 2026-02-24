@@ -6,7 +6,7 @@ export const size = {
   width: 32,
   height: 32,
 }
-export const contentType = 'image/png'
+export const contentType = 'icon/png'
 
 export default async function Icon() {
   // Attempt to load icon.png from the same directory (app/)

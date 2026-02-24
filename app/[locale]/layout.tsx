@@ -2,7 +2,6 @@ import { ReactNode } from 'react'
 import Footer from '@/components/Footer'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
-<SpeedInsights />
 
 interface LocaleLayoutProps {
   children: ReactNode

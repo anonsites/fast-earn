@@ -1,5 +1,7 @@
 import { ReactNode } from 'react'
 import type { Metadata, Viewport } from 'next'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import './globals.css'
 
 export const viewport: Viewport = {
@@ -11,17 +13,17 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://fast-earn.vercel.app'),
   title: {
-    default: 'Fast Earn - Advertising Reward Platform',
+    default: 'Fast Earn - Make Money online',
     template: '%s | Fast Earn',
   },
-  description: 'Make money online by sharing ads with your friends. Fast Earn is a platform that rewards you for promoting products and services. Join now and start earning!',
+  description: 'Make money online by watching videos and completing tasks. Fast Earn is a platform that rewards you for promoting products and services. Join now and start earning!',
   keywords: ['earn money', 'online rewards', 'watch videos', 'complete tasks', 'rwanda', 'mobile money', 'work from home'],
   authors: [{ name: 'Fast Earn Team' }],
   creator: 'Fast Earn',
   publisher: 'Fast Earn',
   openGraph: {
-    title: 'Fast Earn - Advertising Reward Platform',
-    description: 'Make money online by sharing ads with your friends. Join now and start earning!',
+    title: 'Fast Earn - Make Money online',
+    description: 'Make money online by watching videos and completing tasks. Join now and start earning!',
     url: 'https://fast-earn.vercel.app',
     siteName: 'Fast Earn',
     locale: 'en_US',
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Fast Earn',
-    description: 'Make money online by sharing ads with your friends.',
+    description: 'Make money online by watching videos and completing tasks.',
     creator: '@fastearn',
   },
 }
@@ -38,7 +40,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-slate-900 text-white antialiased">{children}</body>
+      <body className="bg-slate-900 text-white antialiased">{children}
+
+      <Analytics />
+      <SpeedInsights />
+      </body>
     </html>
   )
 }
