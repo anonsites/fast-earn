@@ -329,113 +329,6 @@ Monthly Revenue = (Pro Users × 5,000 RWF) + (Pro Max Users × 10,000 RWF)
 
 ---
 
-## 🔐 Admin Utilities (`/lib/admin.ts`)
-
-### Key Functions:
-
-```typescript
-// Auth Check
-isUserAdmin(userId: string): Promise<boolean>
-
-// Logging
-logAdminActivity(adminId, action, targetType, targetId, changes)
-
-// Users
-getAllUsers(limit, offset, filters)
-toggleUserSuspension(userId, suspend, adminId)
-verifyUser(userId, adminId)
-
-// Tasks
-getAllTasks(limit, offset, filters)
-updateTask(taskId, updates, adminId)
-deactivateTask(taskId, adminId)
-
-// Withdrawals
-getAllWithdrawals(limit, offset, filters)
-approveWithdrawal(withdrawalId, adminId, notes)
-rejectWithdrawal(withdrawalId, adminId, reason)
-
-// Fraud
-logFraud(userId, fraudType, severity, description, actionTaken)
-getFraudLogs(limit, offset)
-
-// Stats
-getDashboardStats()
-getSystemStats()
-getAllSubscriptions(limit, offset)
-```
-
----
-
-## 📊 Admin Hooks (`/lib/hooks.ts`)
-
-### `useAuth()`
-Returns: `{ user, isAuthenticated, isAdmin, loading, logout }`
-
-```typescript
-const { user, isAuthenticated, isAdmin, loading, logout } = useAuth()
-
-if (isAdmin) {
-  // Show admin controls
-}
-```
-
-### `useAdminRoute()`
-Protects admin pages from non-admin users
-
-```typescript
-const { isProtected } = useAdminRoute()
-
-useEffect(() => {
-  if (!isProtected) return
-  // Load admin data
-}, [isProtected])
-```
-
----
-
-## 🗄 Database Schema Updates (Phase 5)
-
-### Users Table (Enhanced)
-```sql
-role TEXT CHECK (role IN ('user', 'admin')) DEFAULT 'user'
-ip_addresses TEXT[] -- For fraud detection
-device_fingerprints TEXT[] -- Device tracking
-last_login TIMESTAMP
-failed_login_attempts INT DEFAULT 0
-```
-
-### New Tables
-
-**fraud_logs** - Suspicious activity tracking
-```sql
-user_id UUID, fraud_type TEXT, severity TEXT, 
-description TEXT, action_taken TEXT, created_at TIMESTAMP
-```
-
-**admin_activities** - Audit trail
-```sql
-admin_id UUID, action TEXT, target_type TEXT,
-target_id UUID, changes JSONB, created_at TIMESTAMP
-```
-
-**system_settings** - Configuration
-```sql
-key TEXT UNIQUE, value TEXT, updated_by UUID, updated_at TIMESTAMP
-```
-
----
-
-## 🔑 Environment Setup for Admin
-
-Add admin user to database:
-```sql
-INSERT INTO users (email, full_name, role, tier, is_verified)
-VALUES ('[email protected]', 'Admin User', 'admin', 'pro_max', true)
-```
-
----
-
 ## 📋 Admin Workflow Example
 
 1. **User Registration** → Role defaults to 'user'
@@ -449,25 +342,7 @@ VALUES ('[email protected]', 'Admin User', 'admin', 'pro_max', true)
 9. **Monitor Fraud** → Review fraud cases, take action
 10. **Audit Trail** → All actions logged for compliance
 
-
-
 ---
-
-### `/admin/subscriptions`
-
-* Monitor tier upgrades
-* Subscription revenue
-
----
-
-### `/admin/analytics`
-
-* Earnings vs payouts
-* Task completion rates
-* Fraud patterns
-
----
-
 # 🗄 DATABASE STRUCTURE `descrbed in /database/chema.sql`
 
 ---
@@ -475,42 +350,8 @@ VALUES ('[email protected]', 'Admin User', 'admin', 'pro_max', true)
 # 🌍 LANGUAGE FILES
 
 ---
+uses internalization i18n but it is not used in the project yet (not translated)
 
-## `/messages/en.json`
-
-```json
-{
-  "welcome": "Welcome",
-  "start_earning": "Start Earning",
-  "dashboard": "Dashboard",
-  "tasks": "Tasks",
-  "wallet": "Wallet",
-  "withdraw": "Withdraw",
-  "upgrade": "Upgrade",
-  "free": "Free",
-  "pro": "Pro",
-  "pro_max": "Pro Max"
-}
-```
-
----
-
-## `/messages/rw.json`
-
-```json
-{
-  "welcome": "Murakaza neza",
-  "start_earning": "Tangira kubona amafaranga",
-  "dashboard": "Imbonerahamwe",
-  "tasks": "Imirimo",
-  "wallet": "Igikapu",
-  "withdraw": "Kubikuza",
-  "upgrade": "Kuzamura konti",
-  "free": "Ubuntu",
-  "pro": "Pro",
-  "pro_max": "Pro Max"
-}
-```
 # Development Phases
 
 ---

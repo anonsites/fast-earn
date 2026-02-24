@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-//export const runtime = 'edge'
+export const runtime = 'edge'
 
 export const alt = 'Fast Earn - Advertising Reward Platform'
 export const size = {
