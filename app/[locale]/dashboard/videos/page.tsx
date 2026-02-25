@@ -40,6 +40,9 @@ const getYouTubeId = (url: string): string | null => {
       if (parsed.pathname.startsWith('/embed/')) {
         return parsed.pathname.split('/embed/')[1] || null
       }
+      if (parsed.pathname.startsWith('/shorts/')) {
+        return parsed.pathname.split('/shorts/')[1] || null
+      }
     }
   } catch {
     return null
@@ -48,11 +51,75 @@ const getYouTubeId = (url: string): string | null => {
   return null
 }
 
+const getInstagramId = (url: string): string | null => {
+  try {
+    const parsed = new URL(url)
+    const host = parsed.hostname.replace('www.', '')
+
+    if (host === 'instagram.com') {
+      if (parsed.pathname.startsWith('/reel/')) {
+        return parsed.pathname.split('/reel/')[1].split('/')[0] || null
+      }
+      if (parsed.pathname.startsWith('/p/')) {
+        return parsed.pathname.split('/p/')[1].split('/')[0] || null
+      }
+    }
+  } catch {
+    return null
+  }
+  return null
+}
+
+const getTikTokId = (url: string): string | null => {
+  try {
+    const parsed = new URL(url)
+    const host = parsed.hostname.replace('www.', '')
+
+    if (host === 'tiktok.com') {
+      if (parsed.pathname.includes('/video/')) {
+        return parsed.pathname.split('/video/')[1].split('/')[0] || null
+      }
+    }
+  } catch {
+    return null
+  }
+  return null
+}
+
+const isVerticalVideo = (url: string): boolean => {
+  if (!url) return false
+  try {
+    const parsed = new URL(url)
+    const host = parsed.hostname.replace('www.', '')
+
+    if (host === 'youtube.com' || host === 'm.youtube.com') {
+      return parsed.pathname.startsWith('/shorts/')
+    }
+    if (host === 'instagram.com') {
+      return parsed.pathname.startsWith('/reel/') || parsed.pathname.startsWith('/p/')
+    }
+    if (host === 'tiktok.com') {
+      return true
+    }
+  } catch {
+    return false
+  }
+  return false
+}
+
 const getEmbedUrl = (url: string | null | undefined) => {
   if (!url) return ''
-  const videoId = getYouTubeId(url)
-  if (videoId) {
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`
+  const youtubeId = getYouTubeId(url)
+  if (youtubeId) {
+    return `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`
+  }
+  const instagramId = getInstagramId(url)
+  if (instagramId) {
+    return `https://www.instagram.com/reel/${instagramId}/embed`
+  }
+  const tiktokId = getTikTokId(url)
+  if (tiktokId) {
+    return `https://www.tiktok.com/embed/v2/${tiktokId}`
   }
   return url
 }
@@ -70,6 +137,10 @@ function VideoPlayerModal({
 }) {
   const [watchedSeconds, setWatchedSeconds] = useState(0)
   const [isCompleting, setIsCompleting] = useState(false)
+  const [hasAutoCompleted, setHasAutoCompleted] = useState(false)
+
+  const videoUrl = video.external_url || video.video_url || ''
+  const isVertical = isVerticalVideo(videoUrl)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,15 +155,23 @@ function VideoPlayerModal({
     setIsCompleting(false)
   }
 
+  useEffect(() => {
+    if (watchedSeconds >= (video.min_watch_seconds || 30) && !isCompleting && !hasAutoCompleted) {
+      setHasAutoCompleted(true)
+      handleComplete()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchedSeconds, video.min_watch_seconds, hasAutoCompleted, isCompleting])
+
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="bg-black/90 rounded-2xl max-w-2xl w-full p-6 border border-white/10">
+      <div className={`bg-black/90 rounded-2xl w-full p-6 border border-white/10 ${isVertical ? 'max-w-sm' : 'max-w-2xl'}`}>
         <h2 className="text-2xl font-bold mb-4">{video.title}</h2>
 
-        {video.external_url || video.video_url ? (
-          <div className="mb-6 aspect-video bg-gray-900 rounded-lg overflow-hidden">
+        {videoUrl ? (
+          <div className={`mb-6 bg-gray-900 rounded-lg overflow-hidden ${isVertical ? 'aspect-[9/16]' : 'aspect-video'}`}>
             <iframe
-              src={getEmbedUrl(video.external_url || video.video_url)}
+              src={getEmbedUrl(videoUrl)}
               title={video.title}
               className="w-full h-full border-0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
