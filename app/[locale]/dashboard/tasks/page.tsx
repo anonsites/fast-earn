@@ -12,6 +12,10 @@ import { Task } from '@/lib/types'
 import { AlertCircle, CheckCircle2, Clock3, X, Lock, Eye, Share2 } from 'lucide-react'
 import CopyButton from '@/components/CopyButton'
 import supabase from '@/lib/supabaseClient'
+import TikTokTaskCard from '@/components/TikTokTaskCard'
+import InstagramTaskCard from '@/components/InstagramTaskCard'
+import YouTubeSubscribeTaskCard from '@/components/YouTubeSubscribeTaskCard'
+import { generateReferralLink } from '@/lib/referral'
 
 interface TasksPageProps {
   params: Promise<{ locale: string }>
@@ -430,6 +434,8 @@ export default function TasksPage({ params }: TasksPageProps) {
     return <PageLoading />
   }
 
+  const referralLink = userId ? generateReferralLink(userId) : ''
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white py-8">
       <div className="container mx-auto px-4">
@@ -520,7 +526,7 @@ export default function TasksPage({ params }: TasksPageProps) {
                         navigator.share({
                           title: 'Join Fast Earn',
                           text: 'Earn money by completing simple tasks!',
-                          url: `https://fast-earn.vercel.app/register?ref=${userId}`,
+                          url: referralLink,
                         }).catch(() => {})
                       } else {
                         showNotification('info', 'Share', 'Please use the copy button below.')
@@ -545,7 +551,7 @@ export default function TasksPage({ params }: TasksPageProps) {
 
                 <div className="space-y-2">
                   <CopyButton
-                    textToCopy={`https://fast-earn.vercel.app/register?ref=${userId}`}
+                    textToCopy={referralLink}
                     className="w-full py-2.5 px-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg transition-colors"
                     onCopy={(success) => {
                       if (success) {
@@ -564,6 +570,19 @@ export default function TasksPage({ params }: TasksPageProps) {
 
             {tasks.map((task) => {
               const reward = task.base_reward * (userTier === 'pro' ? 2 : userTier === 'pro_max' ? 3 : 1)
+              
+              if (task.category === 'follow' && task.external_url?.includes('tiktok.com')) {
+                return <TikTokTaskCard key={task.id} task={task} reward={reward} actionButton={renderActionButton(task)} />
+              }
+
+              if (task.category === 'follow' && task.external_url?.includes('instagram.com')) {
+                return <InstagramTaskCard key={task.id} task={task} reward={reward} actionButton={renderActionButton(task)} />
+              }
+
+              if (task.category === 'subscribe' && (task.external_url?.includes('youtube.com') || task.external_url?.includes('youtu.be'))) {
+                return <YouTubeSubscribeTaskCard key={task.id} task={task} reward={reward} actionButton={renderActionButton(task)} />
+              }
+
               return (
                 <div key={task.id} className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors flex flex-col">
                   <div className="mb-4">

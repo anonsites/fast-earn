@@ -49,9 +49,34 @@ export default function AdminCreateTaskPage({ params }: AdminCreateTaskPageProps
         throw new Error('Link is required')
       }
 
+      let urlToSave = form.external_url.trim()
+
+      // Special handling for YouTube Subscribe tasks to allow Channel IDs
+      if (form.category === 'subscribe') {
+        // If it looks like a channel ID (starts with UC and no slashes/protocol)
+        if (!urlToSave.includes('/') && urlToSave.startsWith('UC')) {
+          urlToSave = `https://www.youtube.com/channel/${urlToSave}`
+        }
+      }
+
+      // Special handling for TikTok/Instagram Follow tasks to allow usernames
+      if (form.category === 'follow') {
+        if (urlToSave.startsWith('@')) {
+          urlToSave = `https://www.tiktok.com/${urlToSave}`
+        } else if (!urlToSave.includes('/') && !urlToSave.includes('.')) {
+          urlToSave = `https://www.instagram.com/${urlToSave}`
+        }
+      }
+
+      // Ensure URL has protocol if missing (since we changed input type to text)
+      if (!urlToSave.match(/^https?:\/\//)) {
+        urlToSave = `https://${urlToSave}`
+      }
+
       const user = await getCurrentUser()
       const payload = {
         ...form,
+        external_url: urlToSave,
         base_reward: Number(form.base_reward),
         total_budget: Number(form.total_budget),
         min_watch_seconds: form.min_watch_seconds ? Number(form.min_watch_seconds) : undefined,
@@ -125,8 +150,8 @@ export default function AdminCreateTaskPage({ params }: AdminCreateTaskPageProps
           </div>
 
           <div>
-            <label className="block text-sm text-gray-300 mb-1">Video URL / Link <span className="text-red-400">*</span></label>
-            <input type="url" value={form.external_url} onChange={(e) => handleChange('external_url', e.target.value)} placeholder="https://example.com/video" className="w-full px-3 py-2 rounded bg-black/40" required />
+            <label className="block text-sm text-gray-300 mb-1">Video URL / Link / Username / Channel ID <span className="text-red-400">*</span></label>
+            <input type="text" value={form.external_url} onChange={(e) => handleChange('external_url', e.target.value)} placeholder="https://... or @tiktok or instagram or Channel ID" className="w-full px-3 py-2 rounded bg-black/40" required />
           </div>
 
           {error && <div className="p-3 rounded bg-red-500/20 text-red-300 text-sm">{error}</div>}

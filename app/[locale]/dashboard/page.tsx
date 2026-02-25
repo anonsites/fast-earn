@@ -121,15 +121,6 @@ export default function DashboardPage({ params }: DashboardPageProps) {
 
               {menuOpen && (
                 <div className="absolute right-0 mt-2 w-64 rounded-xl p-2 bg-gradient-to-br from-blue-600 to-emerald-500 border border-white/20 shadow-2xl backdrop-blur-md z-20 flex flex-col gap-1">
-                  <CopyButton
-                    textToCopy={`https://fast-earn.vercel.app/register?ref=${user?.id}`}
-                    className="w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg text-white hover:bg-white/15 transition-colors font-semibold"
-                    onCopy={() => setTimeout(() => setMenuOpen(false), 500)}
-                    successContent={<><Check size={20} className="text-emerald-400" /><span>Copied!</span></>}
-                  >
-                    <Share2 size={25} className="bg-black rounded p-1" />
-                    <span>Share FastEarn</span>
-                  </CopyButton>
                   <a
                     href={`/${locale}/support`}
                     onClick={() => setMenuOpen(false)}

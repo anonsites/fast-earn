@@ -9,7 +9,7 @@ interface RegisterModalProps {
   locale: string
   isOpen: boolean
   onClose: () => void
-  refCode?: string
+  refCode: string | null | undefined
 }
 
 export default function RegisterModal({ locale, isOpen, onClose, refCode }: RegisterModalProps) {
@@ -31,6 +31,7 @@ export default function RegisterModal({ locale, isOpen, onClose, refCode }: Regi
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    console.log('refcode = ', refCode)
 
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters')

@@ -45,7 +45,7 @@ Main file handling referral logic with 7 exported functions:
 
 #### `generateReferralLink(userId: string): string`
 - **Purpose:** Create shareable referral URL
-- **Output:** `https://fastearn.vercel.app/register?ref={userId}`
+- **Output:** `https://fastearn.vercel.app/?ref={userId}`
 - **Usage:** Frontend passes this to users to share
 
 #### `trackReferralSignup(referrerId: string, referredUserId: string)`

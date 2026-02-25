@@ -1,11 +1,12 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
+import { ReactNode, useState, useEffect, Suspense } from 'react'
 import FloatingActivityAlerts from '@/components/FloatingActivityAlerts'
 import { homeActivityNotifications } from '@/lib/data/activityNotifications'
 import LoginModal from '@/components/LoginModal'
 import RegisterModal from '@/components/RegisterModal'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
+import PageLoading from '@/components/PageLoading'
 
 const Section = ({ title, children, className = '' }: { title: string; children: ReactNode; className?: string }) => (
   <section className={`py-16 md:py-24 ${className}`}>
@@ -16,11 +17,13 @@ const Section = ({ title, children, className = '' }: { title: string; children:
   </section>
 )
 
-export default function Home() {
+function HomeContent() {
   const params = useParams()
   const rawLocale = params?.locale
   const locale = Array.isArray(rawLocale) ? rawLocale[0] ?? 'en' : rawLocale ?? 'en'
+  const searchParams = useSearchParams()
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [refCode, setRefCode] = useState<string | null>(null)
   const [showRegisterModal, setShowRegisterModal] = useState(false)
 
   const howItWorksSteps = [
@@ -45,6 +48,21 @@ export default function Home() {
     { question: 'Can I upgrade my account category later?', answer: 'Yes. You can upgrade to Pro or Pro Max anytime from your dashboard.' },
   ]
 
+  useEffect(() => {
+    const ref = searchParams?.get('ref')
+    if (ref) {
+      setRefCode(ref)
+    }
+  }, [searchParams])
+
+  // Function to handle opening the register modal with a referral code
+  const openRegisterModal = (ref?: string) => {
+    if (ref) {
+      setRefCode(ref)
+    }
+    setShowRegisterModal(true)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white">
       <FloatingActivityAlerts items={homeActivityNotifications} />
@@ -59,7 +77,7 @@ export default function Home() {
           </p>
           <div className="flex items-center justify-center gap-4">
             <button 
-              onClick={() => setShowRegisterModal(true)}
+              onClick={() => openRegisterModal()}
               className="bg-emerald-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-colors"
             >
               Start Earning
@@ -119,10 +137,19 @@ export default function Home() {
         onClose={() => setShowLoginModal(false)} 
       />
       <RegisterModal 
-        locale={locale} 
+        locale={locale}
+        refCode={refCode}
         isOpen={showRegisterModal} 
         onClose={() => setShowRegisterModal(false)} 
       />
     </div>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<PageLoading />}>
+      <HomeContent />
+    </Suspense>
   )
 }
