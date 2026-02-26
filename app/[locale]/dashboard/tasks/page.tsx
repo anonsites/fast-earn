@@ -591,8 +591,8 @@ export default function TasksPage({ params }: TasksPageProps) {
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold mb-2">{task.title}</h3>
-                  <p className="text-gray-400 text-sm mb-4 flex-grow">{task.description}</p>
+                  <h3 className="text-xl font-bold mb-2 break-words">{task.title}</h3>
+                  <p className="text-gray-400 text-sm mb-4 flex-grow break-words">{task.description}</p>
 
                   <div className="space-y-2 mb-6 pb-6 border-b border-white/10">
                     <div className="flex justify-between text-sm">

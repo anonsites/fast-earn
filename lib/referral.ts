@@ -22,7 +22,7 @@ const REFERRAL_BONUSES = {
  * @returns Referral URL
  */
 export function generateReferralLink(userId: string): string {
-  return `https://fastearn.vercel.app/?ref=${userId}`
+  return `https://fast-earn.vercel.app/?ref=${userId}`
 }
 
 /**
