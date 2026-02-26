@@ -16,6 +16,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 import PageLoading from '@/components/PageLoading'
 import ReferralLeaderboard from '@/components/ReferralLeaderboard'
 import supabase from '@/lib/supabaseClient'
+import { generateReferralLink } from '@/lib/referral'
 
 interface DashboardPageProps {
   params: Promise<{ locale: string }>
@@ -223,7 +224,7 @@ export default function DashboardPage({ params }: DashboardPageProps) {
                   <Trophy size={30} />
                 </button>
                 <CopyButton
-                  textToCopy={`https://fast-earn.vercel.app/register?ref=${user?.id}`}
+                  textToCopy={user ? generateReferralLink(user.id) : ''}
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   <Copy size={25} />

@@ -69,7 +69,7 @@ export default function YouTubeSubscribeTaskCard({ task, reward, actionButton }:
         <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg shrink-0">
           <Youtube className="text-white" size={28} />
         </div>
-        <div className="overflow-hidden">
+        <div className="overflow-hidden flex-1">
           <h3 className="text-lg font-bold leading-tight truncate">{task.title}</h3>
           <p className="text-red-200/70 text-xs font-medium uppercase tracking-wider mt-1">YouTube Channel</p>
         </div>
@@ -89,7 +89,7 @@ export default function YouTubeSubscribeTaskCard({ task, reward, actionButton }:
          </div>
       )}
 
-      <p className="text-gray-300 text-sm mb-6 flex-grow">{task.description}</p>
+      <p className="text-gray-300 text-sm mb-6 flex-grow break-words">{task.description}</p>
 
       <div className="space-y-2 mb-6 pb-6 border-b border-white/10">
         <div className="flex justify-between text-sm">
