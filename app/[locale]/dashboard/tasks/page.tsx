@@ -584,7 +584,7 @@ export default function TasksPage({ params }: TasksPageProps) {
               }
 
               return (
-                <div key={task.id} className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors flex flex-col">
+                <div key={task.id} className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors flex flex-col overflow-hidden">
                   <div className="mb-4">
                     <span className="inline-block px-3 py-1 bg-purple-600/30 text-purple-300 rounded-full text-xs font-medium capitalize">
                       {task.category}

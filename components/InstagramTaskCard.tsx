@@ -13,7 +13,7 @@ interface InstagramTaskCardProps {
 
 export default function InstagramTaskCard({ task, reward, actionButton }: InstagramTaskCardProps) {
   return (
-    <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-white/10 hover:border-pink-500/30 transition-colors flex flex-col">
+    <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-white/10 hover:border-pink-500/30 transition-colors flex flex-col overflow-hidden">
       <div className="mb-6 flex items-center gap-4">
         <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 flex items-center justify-center shadow-lg shrink-0">
           <Instagram className="text-white" size={28} />

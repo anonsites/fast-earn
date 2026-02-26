@@ -43,8 +43,8 @@ export default function TaskCard({ task, userTier, children }: TaskCardProps) {
       </div>
 
       <div className="p-6 flex flex-col flex-grow">
-        <h3 className="text-xl font-bold mb-2 flex-grow">{task.title}</h3>
-        <p className="text-gray-400 text-sm mb-4">{task.description}</p>
+        <h3 className="text-xl font-bold mb-2 flex-grow break-words">{task.title}</h3>
+        <p className="text-gray-400 text-sm mb-4 break-words">{task.description}</p>
 
         {(task as any).is_upsell && (
           <div className="mb-4 p-2 bg-amber-900/20 border border-amber-500/30 rounded text-xs text-amber-200 flex items-center gap-2">
